@@ -1,25 +1,27 @@
-#크롤링시 필요한 라이브러리 불러오기
+#32193392
+#이은송
+
+##########크롤링 라이브러리 호출##########
 from bs4 import BeautifulSoup
 import requests
 import re
-import datetime
-from tqdm import tqdm
 import sys
 import pandas as pd
 from datetime import datetime, timedelta
+from tqdm import tqdm
 
 #뉴스 크롤링 결과를 담을 리스트
 news_titles = []  #뉴스 제목
 news_url =[]  #뉴스 링크
 news_contents =[]  #뉴스 본문
 news_dates = []  #뉴스 날짜
-news_url_final = []  #네이버뉴스 필터링 후 제목, 링크, 내용 담을 리스트 생성
+news_url_final = []  #네이버뉴스 필터링 후 제목, 링크, 내용 담을 리스트
 
 ##########
 ##########함수정의##########
-# 페이지 정제화함수
-# 페이지 형식은 1, 11, 21, ... 형태를 가짐
-def makePgNum(num):
+#페이지 형식 변경 함수
+#네이버 뉴스의 1, 2, 3, 4, ... 페이지 => 1, 11, 21, 31, ...
+def ChangePageNum(num):
     if num == 1:
         return num
     elif num == 0:
@@ -33,17 +35,17 @@ def makeUrl(search, maxpage, s_date, e_date):
 #def makeUrl(search, sort, maxpage, s_date, e_date): #검색옵션을 가지는 경우
         urls = []
         page = 1
-        s_from = s_date.replace(".","")
-        e_to = e_date.replace(".","")
+        s_from = s_date.replace(".","") #시작일의 형식 변경
+        e_to = e_date.replace(".","") #종료일의 형식 변경
         for i in range(page, maxpage + 1):
-            page = makePgNum(i)
+            page = ChangePageNum(i)
             url = "https://search.naver.com/search.naver?where=news&sm=tab_pge&query=" + search + "&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "&start=" + str(page)
             #url = "https://search.naver.com/search.naver?where=news&sm=tab_pge&query=" + search + "&sort="+sort + "&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "&start=" + str(page) #검색옵션을 가지는 경우
             urls.append(url)
         print("생성url: ", urls)
         return urls
 
-# html에서 원하는 속성 추출하는 함수(기사, 추출하려는 속성값)
+# html에서 원하는 속성 추출하는 함수(기사, 추출할 속성값)
 def news_attrs_crawler(articles,attrs):
     attrs_content=[]
     for i in articles:
@@ -53,7 +55,7 @@ def news_attrs_crawler(articles,attrs):
 #html생성해서 기사크롤링하는 함수(url): 링크를 반환
 def articles_crawler(url):
     #html 불러오기
-    original_html = requests.get(i,headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"})
+    original_html = requests.get(i,headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"})  #connection error 해결
     html = BeautifulSoup(original_html.text, "html.parser")
 
     url_naver = html.select("div.group_news > ul.list_news > li div.news_area > div.news_info > div.info_group > a.info")
@@ -72,10 +74,15 @@ def makeList(newlist, content):
 ##########
 ##########뉴스크롤링 시작##########
 
+##########[1] 사용자로부터 입력을 받음 ##########
 #검색어 입력
 search = input("검색할 키워드를 입력하시오: ")
+
 ##검색옵션
+##검색옵션의 디폴트는 관련도순
+##본 프로젝트는 관련도 순으로 기사를 추출할 것이기 때문에 검색옵션 제외
 #sort = input("뉴스 검색 방식 입력(관련도순=0  최신순=1  오래된순=2): ")    #관련도순=0  최신순=1  오래된순=2
+
 #뉴스 페이지 수 입력
 maxpage = int(input("\n크롤링할 기사의 페이지 수를 입력하시오(페이지당 최소 1개, 최대 10개): "))
 
@@ -92,15 +99,19 @@ datenum = int(input("\n추출할 날짜의 수를 입력하시오: "))
 e_date = datetime.today().strftime("%Y.%m.%d")
 #시작일 현재날짜
 s_date = (datetime.today() - timedelta(datenum)).strftime("%Y.%m.%d")
+
+print("\n")
 print("시작일: ", s_date)
 print("종료일: ", e_date)
 print("날짜 수: ", datenum)
 
+##########[2] 네이버 뉴스 페이지의 url 생성 ##########
 # naver url 생성 (페이지 단위)
 url = makeUrl(search, maxpage, s_date, e_date)
 #url = makeUrl(search, sort, maxpage, s_date, e_date) #검색옵션이 있는 경우
 
-#각각의 뉴스 크롤러 실행
+##########[3] 추출한 페이지의 html에서 속성 추출 ##########
+#각각의 뉴스 크롤러 실행해서 속성 추출
 for i in url:
     url = articles_crawler(url)
     news_url.append(url)
@@ -108,7 +119,10 @@ for i in url:
 #1차원 리스트로 만들기(내용 제외)
 makeList(news_url_final,news_url)
 
+##########[4] 네이버 뉴스만 추출 ##########
 #네이버 뉴스만 추출
+#네이버 뉴스만 추출한 이유는 네이버뉴스의 형식에 맞는 크롤러만 사용했기 때문
+#네이버 뉴스가 아니라 각각의 신문사로 들어가는 링크일 경우 크롤러를 다 정의해야함
 final_urls = []
 for i in tqdm(range(len(news_url_final))):
     if "news.naver.com" in news_url_final[i]:
@@ -116,10 +130,11 @@ for i in tqdm(range(len(news_url_final))):
     else:
         pass
 
+##########[5] 뉴스 크롤링 ##########
 # 뉴스 내용 크롤링(제목, 본문)
 for i in tqdm(final_urls):
     #각 기사 html get하기
-    news = requests.get(i,headers=headers)
+    news = requests.get(i,headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}) #connection error 해결
     news_html = BeautifulSoup(news.text,"html.parser")
 
     # 뉴스 제목 크롤링
@@ -163,6 +178,8 @@ print('news_url: ',len(final_urls))
 print('news_contents: ',len(news_contents))
 print('news_dates: ',len(news_dates))
 
+##########
+##########추출 결과 변환##########
 #딕셔너리 -> 데이터프레임
 news_df = pd.DataFrame({'date':news_dates,'title':news_titles,'link':final_urls,'content':news_contents})
 print("중복 제거 전 행 개수: ",len(news_df))
@@ -172,4 +189,4 @@ print("중복 제거 후 행 개수: ",len(news_df))
 
 #데이터 프레임 ->csv
 now = datetime.now() 
-news_df.to_csv('{}_{}.csv'.format(search,now.strftime('%Y%m%d_%H시%M분%S초')),encoding='utf-8-sig',index=False)
+news_df.to_csv('{}_{}.csv'.format(search,datetime.now.strftime('%Y%m%d_%H시%M분%S초')),encoding='utf-8-sig',index=False)

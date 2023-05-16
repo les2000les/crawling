@@ -384,5 +384,5 @@ print("중복 제거 후 행 개수: ",len(news_df))
 
 #데이터프레임 ->csv
 now = datetime.now()
-#news_df.to_csv('{}_{}.csv'.format(search),encoding='utf-8-sig',index=False)
-news_df.to_csv('{}_{}.csv'.format(search,datetime.now().strftime('%Y%m%d_%H시%M분%S초')),encoding='utf-8-sig',index=False)
+news_df.to_csv('{}.csv'.format(search),encoding='utf-8-sig',index=False)
+#news_df.to_csv('{}_{}.csv'.format(search,datetime.now().strftime('%Y%m%d_%H시%M분%S초')),encoding='utf-8-sig',index=False)

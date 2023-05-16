@@ -241,12 +241,13 @@ for i in StockList:
 """"""
 ##########데이터프레임 결합##########
 import pandas as pd
+from datetime import datetime
 df_all = pd.concat(news_df_list, ignore_index=True)
 df_all.insert(0,'keyword',news_keyword_list)
 
 #데이터프레임 ->csv
 #now = datetime.now() 
-df_all.to_csv('sample_{}.csv'.format(search,datetime.now().strftime('%Y%m%d_%H시%M분%S초')),encoding='utf-8-sig',index=False)
+df_all.to_csv('sample_{}.csv'.format(datetime.now().strftime('%Y%m%d_%H시%M분%S초')),encoding='utf-8-sig',index=False)
 
 #unbuntu에서 데이터프레임 -> csv
 #news_df.to_csv('sample_{}.csv'.format(search),encoding='utf-8-sig',index=False)

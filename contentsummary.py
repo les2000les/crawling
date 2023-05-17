@@ -1,3 +1,7 @@
+##########
+#본 프로젝트에서는 데이터프레임 'content' 열을 기준으로 요약해서 'summary' 열에 해당 내용을 추가하는 기능이 필요함.
+##########
+
 import torch
 from transformers import PreTrainedTokenizerFast
 from transformers import BartForConditionalGeneration

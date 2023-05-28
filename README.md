@@ -17,7 +17,8 @@ https://colab.research.google.com/drive/19c_1jx32rq5-_kQcvUJolbO7r0laL4pm?hl=ko
 
 ========================================================================
 
-7. dataset 라벨링
-8. dataset 라벨링 검토
+~~7. dataset 라벨링~~
+~~8. dataset 라벨링 검토~~
+
 9. 코드 모델로 변환
 10. triton server 연결

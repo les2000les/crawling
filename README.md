@@ -8,7 +8,7 @@ https://colab.research.google.com/drive/19c_1jx32rq5-_kQcvUJolbO7r0laL4pm?hl=ko
 4. 네이버뉴스 본문 요약 모델 ->23.05.17 complete!
 5. 네이버뉴스 본문 키워드 추출 모델 
 6. 본문 긍정/부정 판단 모델 ->23.05.18 complete!
-7. dataset 라벨링~~
-8. dataset 라벨링 검토~~
+7. dataset 라벨링
+8. dataset 라벨링 검토
 9. 코드 모델로 변환
 10. triton server 연결

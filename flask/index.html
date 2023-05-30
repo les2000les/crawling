@@ -1,0 +1,35 @@
+<body>
+<div className="real-search-bar-container">
+      <h1 className="real-search-bar-logo">Stocks.ing</h1>
+      <form className="real-search-bar-form" onSubmit={handleSearchSubmit}>
+        <div>
+        <h4>주식 키워드</h4>
+        <input
+          type="text"
+          value={searchQuery1}
+          onChange={handleSearchChange1}
+          placeholder="예:티맥스 소프트"
+        />
+        </div>
+        <div>
+        <h4>조회 일</h4>
+        <input
+          type="text"
+          value={searchQuery2}
+          onChange={handleSearchChange2}
+          placeholder="예: 3"
+        />
+        </div>
+        <div>
+        <h4>조회 페이지</h4>
+        <input
+          type="text"
+          value={searchQuery3}
+          onChange={handleSearchChange3}
+          placeholder="예: 3"
+        />
+        </div>
+        <button type="submit">검색</button>
+      </form>
+    </div>
+</body>

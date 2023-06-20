@@ -1,0 +1,45 @@
+# triton
+
+## 도커에 trtion server 설치하기
+1. 도커 데스크탑 설치
+2. https://ngc.nvidia.com/ 계정생성
+3. https://ngc.nvidia.com/setup/api-key api key 받기
+4. cmd 열기
+>> doker login nvcr.io
+>> 
+>> Username: $oauthtoken
+>> 
+>> Password: bjlodWYxY3BqNmw3YWNrZnN0Y2w4aTZpaWU6NTc0NjY5ZGUtNzIwMC00ZGY4LWE5YzMtYzM0MTdmNjMyYzk3
+>> 
+Login Succeeded
+
+>> docker pull nvcr.io/nvidia/tritonserver:21.09-py3
+
+Digest: sha256:70e7e6602d2b101260c13da90381daa8b82c56f1b4d251787858e2fe488e0413
+Status: Downloaded newer image for nvcr.io/nvidia/tritonserver:21.09-py3
+nvcr.io/nvidia/tritonserver:21.09-py3
+
+>>triton image ls
+
+REPOSITORY                    TAG         IMAGE ID       CREATED         SIZE
+
+nvcr.io/nvidia/tritonserver   21.09-py3   63e21e0cb5df   20 months ago   13.6GB
+
+
+## 트리톤 서버 구성
+1. 모델파일
+2. 전처리파일
+3. 후처리파일
+4. config.pbtxt
+
+model_repository/
+
+    ├── kobart_summarization.pt
+    
+    └── config.pbtxt
+
+## 트리톤 서버
+1. 모델 저장 디렉토리 생성
+>> mkdir model_repository
+3. 모델을 생성한 디렉토리에 복사
+4. 트리톤 서버 컨테이너 시작
